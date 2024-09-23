@@ -1,4 +1,6 @@
 import pygame
+from pygame.surface import Surface
+from pygame.math import Vector2
 
 from constants import *
 from circleshape import CircleShape
@@ -10,7 +12,7 @@ class Player(CircleShape):
     and provides additional functionality for player movement, rotation, and shooting.
     """
 
-    def __init__(self, x, y):
+    def __init__(self, x: float, y: float) -> None:
         """
         Initialize the player at the given position with a predefined radius.
 
@@ -19,10 +21,10 @@ class Player(CircleShape):
             y (float): The y-coordinate of the player's initial position.
         """
         super().__init__(x, y, PLAYER_RADIUS)
-        self.rotation = 0  # Player starts facing up (rotation 0)
-        self.timer = 0     # Timer for managing shooting cooldown
+        self.rotation: float = 0  # Player starts facing up (rotation 0)
+        self.timer: float = 0     # Timer for managing shooting cooldown
 
-    def triangle(self):
+    def triangle(self) -> list[Vector2]:
         """
         Calculate the vertices of the triangle representing the player on the screen.
 
@@ -33,14 +35,14 @@ class Player(CircleShape):
         Returns:
             list[Vector2]: A list of three points representing the triangle's vertices.
         """
-        forward = pygame.Vector2(0, 1).rotate(self.rotation)  # Forward direction based on rotation
-        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5  # Right-side direction
-        a = self.position + forward * self.radius  # Front vertex
-        b = self.position - forward * self.radius - right  # Bottom-left vertex
-        c = self.position - forward * self.radius + right  # Bottom-right vertex
+        forward: Vector2 = pygame.Vector2(0, 1).rotate(self.rotation)  # Forward direction based on rotation
+        right: Vector2 = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5  # Right-side direction
+        a: Vector2 = self.position + forward * self.radius  # Front vertex
+        b: Vector2 = self.position - forward * self.radius - right  # Bottom-left vertex
+        c: Vector2 = self.position - forward * self.radius + right  # Bottom-right vertex
         return [a, b, c]
 
-    def draw(self, screen):
+    def draw(self, screen: Surface) -> None:
         """
         Draw the player as a white triangle on the screen.
 
@@ -49,7 +51,7 @@ class Player(CircleShape):
         """
         pygame.draw.polygon(screen, 'white', self.triangle(), 2)
 
-    def rotate(self, dt):
+    def rotate(self, dt: float) -> None:
         """
         Rotate the player based on time delta and turning speed.
 
@@ -61,7 +63,7 @@ class Player(CircleShape):
         """
         self.rotation += dt * PLAYER_TURN_SPEED
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         """
         Update the player's state, including handling movement, rotation, and shooting.
 
@@ -91,7 +93,7 @@ class Player(CircleShape):
         if keys[pygame.K_SPACE]:
             self.shoot(dt)
 
-    def move(self, dt):
+    def move(self, dt: float) -> None:
         """
         Move the player in the direction it's facing based on player speed.
 
@@ -100,10 +102,10 @@ class Player(CircleShape):
         Parameters:
             dt (float): Time delta since the last frame, used to adjust movement speed.
         """
-        forward = pygame.Vector2(0, 1).rotate(self.rotation)  # Calculate forward direction based on rotation
+        forward: Vector2 = pygame.Vector2(0, 1).rotate(self.rotation)  # Calculate forward direction based on rotation
         self.position += forward * PLAYER_SPEED * dt  # Update the player's position
 
-    def shoot(self, dt):
+    def shoot(self, dt: float) -> None:
         """
         Shoot a projectile from the player's current position in the direction it's facing.
 
@@ -117,7 +119,7 @@ class Player(CircleShape):
             return  # If the cooldown timer is still active, prevent shooting
 
         # Create a new shot at the player's current position
-        shot = Shot(self.position.x, self.position.y)
+        shot: Shot = Shot(self.position.x, self.position.y)
         
         # Set the shot's velocity to match the player's current direction
         shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation)

@@ -1,4 +1,6 @@
 import pygame
+from pygame.surface import Surface
+from pygame.math import Vector2
 
 from circleshape import CircleShape
 from constants import *
@@ -11,7 +13,7 @@ class Shot(CircleShape):
     and speed set when they are fired.
     """
     
-    def __init__(self, x, y):
+    def __init__(self, x: float, y: float) -> None:
         """
         Initialize a shot at the given position with a predefined radius.
 
@@ -24,7 +26,7 @@ class Shot(CircleShape):
         """
         super().__init__(x, y, SHOT_RADIUS)
 
-    def draw(self, screen):
+    def draw(self, screen: Surface) -> None:
         """
         Draw the shot as a white circle on the screen.
 
@@ -33,7 +35,7 @@ class Shot(CircleShape):
         """
         pygame.draw.circle(screen, 'white', self.position, self.radius, 2)
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         """
         Update the shot's position based on its velocity and the time delta.
 

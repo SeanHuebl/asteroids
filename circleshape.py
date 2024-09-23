@@ -1,4 +1,6 @@
 import pygame
+from pygame.surface import Surface
+from pygame.math import Vector2
 
 # Base class for circular game objects, such as asteroids and the player.
 class CircleShape(pygame.sprite.Sprite):
@@ -9,7 +11,7 @@ class CircleShape(pygame.sprite.Sprite):
     This class is designed to be extended by more specific game objects.
     """
 
-    def __init__(self, x, y, radius):
+    def __init__(self, x: float, y: float, radius: float) -> None:
         """
         Initialize a circular game object at the given position with a radius.
 
@@ -25,11 +27,11 @@ class CircleShape(pygame.sprite.Sprite):
             super().__init__()  # Call the base initializer without containers
 
         # Position and velocity vectors for object movement and positioning.
-        self.position = pygame.Vector2(x, y)
-        self.velocity = pygame.Vector2(0, 0)  # Velocity starts at zero
-        self.radius = radius  # Radius used for drawing and collision detection
+        self.position: Vector2 = pygame.Vector2(x, y)
+        self.velocity: Vector2 = pygame.Vector2(0, 0)  # Velocity starts at zero
+        self.radius: float = radius  # Radius used for drawing and collision detection
 
-    def draw(self, screen):
+    def draw(self, screen: Surface) -> None:
         """
         Draw the object on the screen.
 
@@ -38,7 +40,7 @@ class CircleShape(pygame.sprite.Sprite):
         """
         pass
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         """
         Update the object's state based on time passed (dt).
 
@@ -47,7 +49,7 @@ class CircleShape(pygame.sprite.Sprite):
         """
         pass
 
-    def collision(self, other):
+    def collision(self, other: 'CircleShape') -> bool:
         """
         Check for collision with another circular object.
 
@@ -61,10 +63,7 @@ class CircleShape(pygame.sprite.Sprite):
             bool: True if the objects collide, False otherwise.
         """
         # Calculate the distance between this object and the other object.
-        distance_between = self.position.distance_to(other.position)
+        distance_between: float = self.position.distance_to(other.position)
 
         # A collision occurs if the distance is less than the sum of their radii.
-        if distance_between < self.radius + other.radius:
-            return True
-        
-        return False
+        return distance_between < self.radius + other.radius

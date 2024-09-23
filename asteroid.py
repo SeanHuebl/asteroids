@@ -1,5 +1,7 @@
 import pygame
 import random
+from pygame.surface import Surface
+from pygame.math import Vector2
 
 from circleshape import CircleShape
 from constants import *
@@ -12,7 +14,7 @@ class Asteroid(CircleShape):
     and can split into smaller pieces when destroyed.
     """
     
-    def __init__(self, x, y, radius):
+    def __init__(self, x: float, y: float, radius: float) -> None:
         """
         Initialize an asteroid at the given position with a specified radius.
 
@@ -23,7 +25,7 @@ class Asteroid(CircleShape):
         """
         super().__init__(x, y, radius)
 
-    def draw(self, screen):
+    def draw(self, screen: Surface) -> None:
         """
         Draw the asteroid as a white circle on the screen.
 
@@ -32,7 +34,7 @@ class Asteroid(CircleShape):
         """
         pygame.draw.circle(screen, 'white', self.position, self.radius, 2)
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         """
         Update the asteroid's position based on its velocity and the time delta.
 
@@ -44,7 +46,7 @@ class Asteroid(CircleShape):
         """
         self.position += self.velocity * dt
 
-    def split(self):
+    def split(self) -> None:
         """
         Split the asteroid into two smaller asteroids upon destruction.
 
@@ -59,14 +61,14 @@ class Asteroid(CircleShape):
             return
         
         # Randomly determine the angle by which the asteroid's velocity will split.
-        angle = random.uniform(20, 50)
+        angle: float = random.uniform(20, 50)
 
         # Create two new velocity vectors for the split asteroids, deviating by the angle.
-        asteroid_vector_1 = self.velocity.rotate(angle)
-        asteroid_vector_2 = self.velocity.rotate(-angle)
+        asteroid_vector_1: Vector2 = self.velocity.rotate(angle)
+        asteroid_vector_2: Vector2 = self.velocity.rotate(-angle)
 
         # Set the radius of the split asteroids to be smaller than the original.
-        new_radius = self.radius - ASTEROID_MIN_RADIUS
+        new_radius: float = self.radius - ASTEROID_MIN_RADIUS
 
         # Create the two smaller asteroids at the same position as the original.
         asteroid_1 = Asteroid(self.position.x, self.position.y, new_radius)

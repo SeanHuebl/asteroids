@@ -1,5 +1,6 @@
 import pygame
 import sys
+from pygame.surface import Surface
 
 # Import custom game objects and constants
 from asteroid import Asteroid
@@ -9,7 +10,7 @@ from player import Player
 from shot import Shot
 
 
-def main():
+def main() -> None:
     """
     Run the Asteroids game.
 
@@ -17,14 +18,13 @@ def main():
     """
     # Initialize Pygame and set up the display screen.
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen: Surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     
     # Create a clock to manage the game frame rate.
     clock = pygame.time.Clock()
-    dt = 0  # Time delta to keep movements consistent across different frame rates.
+    dt: float = 0  # Time delta to keep movements consistent across different frame rates.
 
     # Create sprite groups for updateable and drawable objects.
-    # The distinction allows us to update game logic separately from what we draw.
     updateable = pygame.sprite.Group()  # Objects that require updating each frame.
     drawable = pygame.sprite.Group()    # Objects that need to be drawn to the screen.
     asteroids = pygame.sprite.Group()   # Store all asteroids for collision detection.
@@ -48,16 +48,13 @@ def main():
                 return  # Exit the game loop if the user closes the window.
         
         # Fill the screen with black before drawing the next frame.
-        # This prevents "ghosting" of previous frames.
         screen.fill(color='black')
 
         # Update all objects that need logic calculations (e.g., movement, physics).
-        # The time delta (dt) ensures smooth movement by adjusting changes based on elapsed time.
         for obj in updateable:
             obj.update(dt)
 
         # Collision detection between asteroids and the player or bullets.
-        # Checking for collisions here reduces complexity by separating concerns.
         for asteroid in asteroids:
             if asteroid.collision(player):  # If the player hits an asteroid.
                 print("Game over!")
@@ -70,7 +67,6 @@ def main():
                     bullet.kill()  # Remove the shot after it hits an asteroid.
 
         # Draw all drawable objects (player, asteroids, shots, etc.) onto the screen.
-        # Separating drawing logic ensures that visual updates are clear and independent.
         for obj in drawable:
             obj.draw(screen)
 

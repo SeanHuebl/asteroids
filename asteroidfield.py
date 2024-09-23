@@ -1,6 +1,6 @@
 import pygame
 import random
-
+from pygame.math import Vector2
 from asteroid import Asteroid
 from constants import *
 
@@ -14,39 +14,35 @@ class AsteroidField(pygame.sprite.Sprite):
     
     # Define possible asteroid spawn edges with associated directions.
     # This creates asteroids that start outside the screen and move inward.
-    edges = [
+    edges: list[list[Vector2, callable]] = [
         [
-            pygame.Vector2(1, 0),
-            lambda y: pygame.Vector2(-ASTEROID_MAX_RADIUS, y * SCREEN_HEIGHT),
+            Vector2(1, 0),
+            lambda y: Vector2(-ASTEROID_MAX_RADIUS, y * SCREEN_HEIGHT),
         ],
         [
-            pygame.Vector2(-1, 0),
-            lambda y: pygame.Vector2(
-                SCREEN_WIDTH + ASTEROID_MAX_RADIUS, y * SCREEN_HEIGHT
-            ),
+            Vector2(-1, 0),
+            lambda y: Vector2(SCREEN_WIDTH + ASTEROID_MAX_RADIUS, y * SCREEN_HEIGHT),
         ],
         [
-            pygame.Vector2(0, 1),
-            lambda x: pygame.Vector2(x * SCREEN_WIDTH, -ASTEROID_MAX_RADIUS),
+            Vector2(0, 1),
+            lambda x: Vector2(x * SCREEN_WIDTH, -ASTEROID_MAX_RADIUS),
         ],
         [
-            pygame.Vector2(0, -1),
-            lambda x: pygame.Vector2(
-                x * SCREEN_WIDTH, SCREEN_HEIGHT + ASTEROID_MAX_RADIUS
-            ),
+            Vector2(0, -1),
+            lambda x: Vector2(x * SCREEN_WIDTH, SCREEN_HEIGHT + ASTEROID_MAX_RADIUS),
         ],
     ]
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize an AsteroidField with a spawn timer.
 
         The spawn timer controls when new asteroids are generated.
         """
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.spawn_timer = 0.0
+        self.spawn_timer: float = 0.0
 
-    def spawn(self, radius, position, velocity):
+    def spawn(self, radius: float, position: Vector2, velocity: Vector2) -> None:
         """
         Create a new asteroid at the specified position with a given velocity.
 
@@ -58,7 +54,7 @@ class AsteroidField(pygame.sprite.Sprite):
         asteroid = Asteroid(position.x, position.y, radius)
         asteroid.velocity = velocity
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         """
         Update the asteroid field, spawning new asteroids at intervals.
 
@@ -75,19 +71,19 @@ class AsteroidField(pygame.sprite.Sprite):
             self.spawn_timer = 0
 
             # Randomly choose one of the edges to spawn an asteroid.
-            edge = random.choice(self.edges)
+            edge: list[Vector2, callable] = random.choice(self.edges)
 
             # Randomize asteroid speed and adjust its initial trajectory 
             # to avoid predictable straight-line motion.
-            speed = random.randint(40, 100)
-            velocity = edge[0] * speed
+            speed: int = random.randint(40, 100)
+            velocity: Vector2 = edge[0] * speed
             velocity = velocity.rotate(random.randint(-30, 30))
 
             # Spawn the asteroid at a random position along the chosen edge.
-            position = edge[1](random.uniform(0, 1))
+            position: Vector2 = edge[1](random.uniform(0, 1))
 
             # Randomize asteroid size to introduce variation in difficulty.
-            kind = random.randint(1, ASTEROID_KINDS)
+            kind: int = random.randint(1, ASTEROID_KINDS)
 
             # Spawn the asteroid with the appropriate size and velocity.
             self.spawn(ASTEROID_MIN_RADIUS * kind, position, velocity)
